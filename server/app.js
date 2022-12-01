@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const session = require("express-session");
+const fs = require("fs");
 
 app.use(
   session({
@@ -29,6 +30,19 @@ const server = app.listen(3000, () => {
   console.log("Server starting port: 3000");
 });
 
+let sql = require("./sql.js");
+
+//watchFile은 파일이 변경되는걸 감지합니다.
+// __dirname은 app.js가 실행되고 있는 파일 이름을 알 수 있습니다.
+
+fs.watchFile(__dirname + "/sql.js", (curr, prev) => {
+  console.log("sql 변경시 재시작 없이 반영되도록 함");
+  // 캐시에 sql.js 파일이 올라가 있는 상태입니다. 그걸 지워버려야 합니다.
+  delete require.cache[require.resolve("./sql.js")];
+  // 다시 sql을 불러옵니다.
+  sql = require("./sql.js");
+});
+
 app.post("/api/login", async (request, res) => {
   request.session["email"] = "dnjsalsgh123@naver.com";
   res.send("ok");
@@ -38,13 +52,11 @@ app.post("/api/logout", async (request, res) => {
   res.send("ok");
 });
 
-const sql = require("./sql.js");
-
 // /api 뒤에 어떤 문자가 오든 아래 것이 실행됩니다.
 app.post("/api/:alias", async (request, res) => {
-  if (!request.session.email) {
-    return res.status(401).send({ error: "You need to login" });
-  }
+  // if (!request.session.email) {
+  //   return res.status(401).send({ error: "You need to login" });
+  // }
   try {
     res.send(await req.db(request.params.alias));
   } catch (error) {

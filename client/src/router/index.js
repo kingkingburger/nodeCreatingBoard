@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import ProductListVue from "@/views/ProductList.vue";
 import ProductDetailVue from "@/views/ProductDetail.vue";
 import ProductCreateVue from "@/views/ProductCreate.vue";
+import SalesListVue from "@/views/SalesList.vue";
+import ImageInsertVue from "@/views/ImageInsert.vue";
+import ProductUpdateVue from "@/views/ProductUpdate.vue";
 const routes = [
   {
     path: "/",
@@ -17,6 +20,21 @@ const routes = [
     path: "/create",
     name: "ProductCreateVue",
     component: ProductCreateVue,
+  },
+  {
+    path: "/sales",
+    name: "SalesList",
+    component: SalesListVue,
+  },
+  {
+    path: "/image_insert",
+    name: "ImageInsert",
+    component: ImageInsertVue,
+  },
+  {
+    path: "/update",
+    name: "ProductUpdate",
+    component: ProductUpdateVue,
   },
 
   {

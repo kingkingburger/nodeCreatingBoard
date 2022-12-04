@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const session = require("express-session");
 const fs = require("fs");
-
+const cors = require("cors");
 app.use(
   session({
     secret: "secret code", // 세션에 대한 키
@@ -14,7 +14,12 @@ app.use(
     },
   })
 );
-
+//npm i cors() 하면 서버에서도 cors 허용설정이 가능하다.
+//프론트에서 암만 header에 cors 허용한다고 해도 서버가 허용안하면 안되는거 같다.
+//localhost:8080 -> localhost:3030으로 쏘는것을 허용해주는 것이다.
+app.use(cors());
+//body에서 json파라미터로 서버에 올 수 있는데 이걸 설정해야 json형태로 파라미터를 받을 수 있다.
+app.use(express.json({ limit: "50mb" }));
 const db = {
   database: "dev",
   connectionLimit: 10,
@@ -44,8 +49,22 @@ fs.watchFile(__dirname + "/sql.js", (curr, prev) => {
 });
 
 app.post("/api/login", async (request, res) => {
-  request.session["email"] = "dnjsalsgh123@naver.com";
-  res.send("ok");
+  // request.session["email"] = "dnjsalsgh123@naver.com";
+  // res.send("ok");
+  try {
+    console.log(request.body.param);
+    await req.db("signUp", request.body.param);
+    if (request.body.param.length > 0) {
+      for (let key in request.body.param[0]) {
+        request.session[key] = request.body.param[0][key];
+      }
+      res.send(request.body.param[0]);
+    } else {
+      res.send({ error: "Please try again or contact system manager" });
+    }
+  } catch (err) {
+    res.send({ error: "db access error" });
+  }
 });
 app.post("/api/logout", async (request, res) => {
   request.session.destroy();
@@ -58,7 +77,7 @@ app.post("/api/:alias", async (request, res) => {
   //   return res.status(401).send({ error: "You need to login" });
   // }
   try {
-    res.send(await req.db(request.params.alias));
+    res.send(await req.db(request.params.alias, request.body.param)); //body에 있는 파라미터를 가져온다.
   } catch (error) {
     res.status(500).send({ error: err });
   }

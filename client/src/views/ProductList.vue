@@ -18,11 +18,14 @@
           v-for="(product, i) in productList"
         >
           <div class="card" style="width: 18rem">
-            <a @click="goToDetail(product.id)" style="cursor: pointer"
+            <!-- <a @click="goToDetail(product.id)" style="cursor: pointer"
               ><img
                 :src="`/download/${product.id}/${product.path}`"
                 class="card-img-top"
                 alt="..."
+            /></a> -->
+            <a @click="goToDetail(product.id)" style="cursor: pointer"
+              ><img :src="product.path"
             /></a>
             <div class="card-body">
               <h5 class="card-title">{{ product.product_name }}</h5>
@@ -75,9 +78,11 @@ export default {
   methods: {
     async getProductList() {
       this.productList = await this.$api("/api/productList", {});
-      console.log(this.productList);
     },
     goToDetail(product_id) {
+      //컴포넌트에서 라우터를 쓰는 방법
+      // $router.push()로 path와 query를 넘겨준다.
+      //path는 라우터 경로, query에는 넘길 데이터를 Object형태로 넘겨준다.
       this.$router.push({ path: "/detail", query: { product_id: product_id } });
     },
   },

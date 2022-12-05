@@ -20,4 +20,4 @@ app.use(store);
 app.use(VueSweetalert2);
 app.mount("#app");
 //kakao javascript 키 넣어두기
-window.Kakao.init("04d7423a795584cea1c2ee03d7600a5f1");
+window.Kakao.init("04d7423a795584cea1c2ee03d7600a5f");

@@ -18,9 +18,10 @@ module.exports = {
   productMainImages: {
     query: `select * from dev.t_image ti where product_id = 1 and type = 2;`,
   },
+  //object로 쿼리가 오는데 set으로 하면 알아서 풀어준다.
+  // field: value 형태가 그대로 들어간다.
   productInsert: {
-    query: `insert into dev.t_product (product_name, product_price, delivary_price, add_delivery_price, tags, outbound_days, seller_id, category_id)
-    values(?,?,?,?,?,?,?,?);`,
+    query: `insert into dev.t_product set ?;`,
   },
 
   productInsertImage: {
@@ -34,5 +35,8 @@ module.exports = {
   },
   productDelete: {
     query: `delete from dev.t_product where id=?`,
+  },
+  categoryList: {
+    query: `select * from dev.t_category;`,
   },
 };

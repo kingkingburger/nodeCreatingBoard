@@ -1,48 +1,45 @@
 <template>
-  <main calss="mt-3">
+  <main class="mt-3">
     <div class="container">
       <div class="row">
         <div class="col-md-5">
           <div
             id="carouselExampleIndicators"
             class="carousel carousel-dark slide"
-            data-bs-ride="true"
+            data-bs-ride="carousel"
           >
-            <div class="carousel-indicators">
-              <button
-                type="button"
+            <ol class="carousel-indicators">
+              <li
                 data-bs-target="#carouselExampleIndicators"
                 data-bs-slide-to="0"
                 class="active"
-                aria-current="true"
-                aria-label="Slide 1"
-              ></button>
-              <button
-                type="button"
+              ></li>
+              <li
                 data-bs-target="#carouselExampleIndicators"
                 data-bs-slide-to="1"
-                aria-label="Slide 2"
-              ></button>
-              <button
-                type="button"
+              ></li>
+              <li
                 data-bs-target="#carouselExampleIndicators"
                 data-bs-slide-to="2"
-                aria-label="Slide 3"
-              ></button>
-            </div>
+              ></li>
+            </ol>
             <div class="carousel-inner">
               <div
-                :class="`carousel-item ${i === 0 ? 'active' : ''}`"
+                :class="`carousel-item ${i == 0 ? 'active' : ''}`"
                 :key="i"
                 v-for="(pimg, i) in productImage"
               >
-                <img :src="pimg.path" class="d-block w-100" alt="..." />
+                <img
+                  :src="`/download/${productId}/${pimg.path}`"
+                  class="d-block w-100"
+                  alt="..."
+                />
               </div>
             </div>
-            <button
+            <a
               class="carousel-control-prev"
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
+              href="#carouselExampleIndicators"
+              role="button"
               data-bs-slide="prev"
             >
               <span
@@ -50,11 +47,11 @@
                 aria-hidden="true"
               ></span>
               <span class="visually-hidden">Previous</span>
-            </button>
-            <button
+            </a>
+            <a
               class="carousel-control-next"
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
+              href="#carouselExampleIndicators"
+              role="button"
               data-bs-slide="next"
             >
               <span
@@ -62,19 +59,17 @@
                 aria-hidden="true"
               ></span>
               <span class="visually-hidden">Next</span>
-            </button>
+            </a>
           </div>
         </div>
         <div class="col-md-7">
-          <div class="card">
+          <div class="card shadow-sm">
             <div class="card-body">
-              <h5 class="card-title">
-                {{ productDetail.product_name }}
-              </h5>
+              <h5 class="card-title">{{ productDetail.product_name }}</h5>
               <h5 class="card-title pt-3 pb-3 border-top">
-                {{ getCurrencyFormat(productDetail.product_price) }} 원
+                {{ getCurrencyFormat(productDetail.product_price) }}원
               </h5>
-              <p class="card-text pt-3 border-top">
+              <p class="card-text border-top pt-3">
                 <span class="badge bg-dark me-1">{{
                   productDetail.category1
                 }}</span>
@@ -84,23 +79,22 @@
                 <span class="badge bg-dark">{{ productDetail.category3 }}</span>
               </p>
               <p class="card-text pb-3">
-                배송비 {{ getCurrencyFormat(productDetail.delivary_price) }} |
-                도서산관(제주도) 배송비 추가
-                {{ getCurrencyFormat(productDetail.add_delivery_price) }} |
-                택배배송 | {{ productDetail.outbound_days }} 일 이내 출고
+                배송비 {{ getCurrencyFormat(productDetail.delivery_price) }}원 |
+                도서산간(제주도) 배송비 추가
+                {{ getCurrencyFormat(productDetail.add_delivery_price) }}원 |
+                택배배송 | {{ productDetail.outbound_days }}일 이내 출고
+                (주말,공휴일 제외)
               </p>
-              <!-- 원래 p테그 안에 div 테그를 넣을 수 없다! -->
-              <div class="card-text pt-3 border-top">
+              <div class="card-text border-top pb-3">
                 <div class="row">
                   <div class="col-auto">
-                    <label class="col-form-label"> 구매수량 </label>
+                    <label class="col-form-label">구매수량</label>
                   </div>
-
                   <div class="col-auto">
                     <div class="input-group">
                       <span
                         class="input-group-text"
-                        sylte="cusor:pointer;"
+                        style="cursor: pointer"
                         @click="calculatePrice(-1)"
                         >-</span
                       >
@@ -112,7 +106,7 @@
                       />
                       <span
                         class="input-group-text"
-                        sylte="cusor:pointer;"
+                        style="cursor: pointer"
                         @click="calculatePrice(1)"
                         >+</span
                       >
@@ -128,9 +122,7 @@
                   <h3>{{ getCurrencyFormat(totalPrice) }}원</h3>
                 </div>
               </div>
-              <div
-                class="row d-flex justify-content-between align-items-center"
-              >
+              <div class="d-flex justify-content-between align-items-center">
                 <div class="col-6 d-grid p-1">
                   <button type="button" class="btn btn-lg btn-dark">
                     장바구니 담기
@@ -148,7 +140,10 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <img :src="productDetail.path" class="img-fluid" />
+          <img
+            :src="`/download/${productId}/${productDetail.path}`"
+            class="img-fluid"
+          />
         </div>
       </div>
     </div>

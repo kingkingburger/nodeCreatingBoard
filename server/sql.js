@@ -23,10 +23,11 @@ module.exports = {
   productInsert: {
     query: `insert into dev.t_product set ?;`,
   },
-
-  productInsertImage: {
-    query: `insert into dev.t_image(product_id, type, path)
-    values(?,?,?);`,
+  imageList: {
+    query: `select * from dev.t_image where product_id=?`,
+  },
+  productImageInsert: {
+    query: `insert into dev.t_image set ?;`,
   },
   // 없으면 insert하고 없으면 update하라는 쿼리
   // set을 쓰면 key,value 형태로 insert할 수 있다.

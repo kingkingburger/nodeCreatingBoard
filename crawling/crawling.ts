@@ -1,11 +1,20 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { root } from "cheerio/lib/static";
 import fs from "fs";
+import mysql from "mysql";
 
 interface championInfo {
   id: number;
   name: string;
 }
+
+let connection = mysql.createConnection({
+  host: "localhost",
+  port: 3308,
+  user: "root",
+  password: "1234",
+});
 
 const getHtml = async (championNumber: number) => {
   try {
@@ -19,7 +28,7 @@ const getHtml = async (championNumber: number) => {
 const championName = async () => {
   try {
     const resultChampions: championInfo[] = [];
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 1000; i++) {
       const html = await getHtml(i);
       if (!html) continue;
 
@@ -37,14 +46,16 @@ const championName = async () => {
   } catch (error) {}
 };
 
-//flag : "a+"는 파일을 덮어쓰지 않는다는 설정
+//champion이라는 테이블에 정보 넣기
 championName().then((champ) => {
   if (!champ) {
     return;
   }
+  connection.connect();
   champ.map((c) => {
-    fs.writeFileSync("./crawling/sample.txt", `${JSON.stringify(c)}\n`, {
-      flag: "a+",
-    });
+    connection.query(
+      `insert into dev.champion set champ_num=${c.id}, name='${c.name}'`
+    );
   });
+  connection.end();
 });
